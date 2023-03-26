@@ -1,11 +1,12 @@
 ﻿using Core.BaseEntities;
+using Core.Email;
 
 namespace Core
 {
-    public class User : BaseEntity
+    public class User : BaseEntity<int>
     {
         public string Name { get; set; }
-        public string Email { get; set; }
+        public List<EmailCredentials> Emails { get; set; }
         public string PasswordHash { get; set; }
     }
 }

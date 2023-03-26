@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
-    public class EfUnitOfWork<T> : IUnitOfWork where T : DbContext
+    public class EfUnitOfWork : IUnitOfWork
     {
-        private readonly T _context;
-        public EfUnitOfWork(T context)
+        private readonly CrmDbContext _context;
+        public EfUnitOfWork(CrmDbContext context)
         {
             _context = context;
         }

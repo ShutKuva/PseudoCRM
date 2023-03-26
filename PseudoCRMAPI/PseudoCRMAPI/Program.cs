@@ -1,4 +1,5 @@
 using DataAccessLayer;
+using DataAccessLayer.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CrmDbContext>();
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
+builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
 var app = builder.Build();
 

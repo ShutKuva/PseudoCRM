@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataAccessLayer
 {
-    public class EfRepository<T, U, C> : IRepository<T, U> where T : BaseEntity<U> where C : DbContext
+    public class EfRepository<T, U> : IRepository<T, U> where T : BaseEntity<U>
     {
-        private readonly C _context;
+        private readonly CrmDbContext _context;
 
-        public EfRepository(C context)
+        public EfRepository(CrmDbContext context)
         {
             _context = context;
         }
