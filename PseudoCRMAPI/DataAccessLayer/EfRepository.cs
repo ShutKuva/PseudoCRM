@@ -25,29 +25,22 @@ namespace DataAccessLayer
             return _context.AddAsync(entity).AsTask();
         }
 
-        public void Delete(U id)
+        public void Delete(T entity)
         {
-            T? entity = Read(id);
             if (entity == null)
             {
-                throw new ArgumentException(nameof(id));
+                throw new ArgumentNullException(nameof(entity));
             }
             _context.Remove(entity);
         }
 
-        public async Task DeleteAsync(U id)
+        public async Task DeleteAsync(T entity)
         {
-            T? entity = await ReadAsync(id);
             if (entity == null)
             {
-                throw new ArgumentException(nameof(id));
+                throw new ArgumentNullException(nameof(entity));
             }
             _context.Remove(entity);
-        }
-
-        public T? Read(U id)
-        {
-            return _context.Set<T>().Find();
         }
 
         public Task<T?> ReadAsync(U id)
@@ -63,18 +56,6 @@ namespace DataAccessLayer
         public Task<IEnumerable<T>> ReadByConditionAsync(Expression<Func<T, bool>> predicate, int skip, int take)
         {
             return Task.FromResult(_context.Set<T>().Where(predicate).Skip(skip).Take(take).AsEnumerable());
-        }
-
-        public void Update(T entity)
-        {
-            T? oldEntity = Read(entity.Id);
-            if (oldEntity == null)
-            {
-                Create(entity);
-            }
-
-            EntityEntry<T?> entry = _context.Entry(oldEntity);
-            entry.CurrentValues.SetValues(entity);
         }
 
         public async Task UpdateAsync(T entity)
