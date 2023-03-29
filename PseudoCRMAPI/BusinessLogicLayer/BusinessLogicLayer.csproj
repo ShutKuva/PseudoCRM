@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="MailKit" Version="3.6.0" />
     <PackageReference Include="MimeKit" Version="3.6.1" />
   </ItemGroup>
@@ -15,6 +16,10 @@
     <ProjectReference Include="..\BusinessLogicLayer.Abstractions\BusinessLogicLayer.Abstractions.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\DataAccessLayer.Abstractions\DataAccessLayer.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Email\Adapters\" />
   </ItemGroup>
 
 </Project>

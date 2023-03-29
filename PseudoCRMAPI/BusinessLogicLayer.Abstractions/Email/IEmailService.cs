@@ -1,19 +1,12 @@
 ﻿using Core.Email;
-using Core.Email.Additional;
-using MailKit.Search;
+using Core;
+using Core.Dtos;
 
 namespace BusinessLogicLayer.Abstractions.Email
 {
-    public interface IEmailService<U, M, Q, E>
+    public interface IEmailService<U, E>
     {
-        Task<IReadOnlyList<M>> GetMessages(U user, string publicName, ServerProtocols serverProtocol = ServerProtocols.Imap);
-
-        Task<IReadOnlyList<M>> GetMessages(U user, string publicName, int takeLast);
-
-        Task<IReadOnlyList<M>> GetMessages(U user, string publicName, Q searchQuery);
-
-        Task SendMessage(U user, string publicName, M message);
-
         Task SetNewEmail(U user, E emailCredentials);
+        Task<IEnumerable<EmailDto>> GetRegisteredPublicNames(U user);
     }
 }

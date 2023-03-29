@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CrmDbContext>();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
