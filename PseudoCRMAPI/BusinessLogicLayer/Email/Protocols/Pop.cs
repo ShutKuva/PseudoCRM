@@ -17,7 +17,12 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            ServerInformation popServerInformation = emailCredentials.ServerInformations[ServerProtocols.Pop];
+            ServerInformation? popServerInformation = emailCredentials.ServerInformations.FirstOrDefault(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Pop) == ServerProtocols.Pop)?.ServerInformation;
+
+            if (popServerInformation == null)
+            {
+                throw new ArgumentException("There is no registered server information for this protocol.");
+            }
 
             using Pop3Client client = new Pop3Client();
 

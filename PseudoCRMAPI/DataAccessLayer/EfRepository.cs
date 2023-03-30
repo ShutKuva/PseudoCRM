@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataAccessLayer
 {
-    public class EfRepository<T, U> : IRepository<T, U> where T : BaseEntity<U>
+    public class EfRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly CrmDbContext _context;
 
@@ -43,9 +43,9 @@ namespace DataAccessLayer
             _context.Remove(entity);
         }
 
-        public Task<T?> ReadAsync(U id)
+        public Task<T?> ReadAsync(Expression<Func<T, bool>> predicate)
         {
-            return _context.Set<T>().FindAsync(id).AsTask();
+            return _context.Set<T>().Where(predicate).FirstOrDefaultAsync();
         }
 
         public IEnumerable<T> ReadByCondition(Expression<Func<T, bool>> predicate, int skip, int take)
@@ -60,7 +60,7 @@ namespace DataAccessLayer
 
         public async Task UpdateAsync(T entity)
         {
-            T? oldEntity = await ReadAsync(entity.Id);
+            T? oldEntity = await ReadAsync(e => e.Id == entity.Id);
             if (oldEntity == null)
             {
                 await CreateAsync(entity);

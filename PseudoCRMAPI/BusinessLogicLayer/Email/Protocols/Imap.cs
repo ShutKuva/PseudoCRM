@@ -16,7 +16,12 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            ServerInformation imapServerInformation = emailCredentials.ServerInformations[ServerProtocols.Imap];
+            ServerInformation? imapServerInformation = emailCredentials.ServerInformations.FirstOrDefault(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Imap) == ServerProtocols.Imap)?.ServerInformation;
+
+            if (imapServerInformation == null)
+            {
+                throw new ArgumentException("There is no registered server information for this protocol.");
+            }
 
             List<MimeMessage> result = new List<MimeMessage>();
 
