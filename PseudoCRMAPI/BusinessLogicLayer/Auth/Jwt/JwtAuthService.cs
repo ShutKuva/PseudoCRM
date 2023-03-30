@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using AutoMapper;
 
 namespace BusinessLogicLayer.Auth.Jwt
 {
@@ -16,12 +17,14 @@ namespace BusinessLogicLayer.Auth.Jwt
     {
         private readonly IRepository<User> _userRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private readonly JwtConfiguration _jwtOptions;
 
-        public JwtAuthService(IRepository<User> userRepository, IUnitOfWork unitOfWork, IOptions<JwtConfiguration> jwtOptions)
+        public JwtAuthService(IRepository<User> userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptions<JwtConfiguration> jwtOptions)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _jwtOptions = jwtOptions.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
         }
 
@@ -41,27 +44,42 @@ namespace BusinessLogicLayer.Auth.Jwt
             }
         }
 
-        public Task<JwtResult> Register(JwtAuthRegistrationParameters parameters)
+        public async Task<JwtResult> Register(JwtAuthRegistrationParameters parameters)
         {
-            throw new NotImplementedException();
+            User user = _mapper.Map<User>(parameters.User);
+
+            await _userRepository.CreateAsync(user);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            JwtResult result = await GenerateJwtResult(user);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<JwtResult> LoginWithCredentials(UserLoginDto user)
         {
-            User? userObj = await _userRepository.ReadAsync(u => u.Name == user.Name && u.PasswordHash == user.Password);
+            User? userObj = await _userRepository.ReadAsync(u => u.Name == user.Name && u.PasswordHash == user.PasswordHash);
             if (userObj == null)
             {
                 throw new ArgumentException("There is no user with this credentials");
             }
 
-            return await GenerateJwtResult(userObj);
+            JwtResult result = await GenerateJwtResult(userObj);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<JwtResult> RefreshToken(JwtResult oldResult)
         {
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             JwtSecurityToken token = handler.ReadJwtToken(oldResult.Token);
-            User? user = await _userRepository.ReadAsync(u => u.Name == token.Claims.FirstOrDefault(c => c.Value == ClaimNames.Name).Value);
+            int id = int.Parse(token.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value);
+            User? user = await _userRepository.ReadAsync(u => u.Id == id);
             if (user == null)
             {
                 throw new ArgumentException("There is no user with this credentials");
@@ -72,7 +90,11 @@ namespace BusinessLogicLayer.Auth.Jwt
                 throw new ArgumentException("Invalid refresh token");
             }
 
-            return await GenerateJwtResult(user);
+            JwtResult result = await GenerateJwtResult(user);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<JwtResult> GenerateJwtResult(User user)
@@ -84,8 +106,6 @@ namespace BusinessLogicLayer.Auth.Jwt
             user.RefreshToken = result.RefreshToken;
 
             await _userRepository.UpdateAsync(user);
-
-            await _unitOfWork.SaveChangesAsync();
 
             return result;
         }
@@ -104,6 +124,7 @@ namespace BusinessLogicLayer.Auth.Jwt
             descriptor.Issuer = _jwtOptions.Issuer;
             descriptor.Audience = _jwtOptions.Audience;
             descriptor.Expires = DateTime.Now.AddHours(_jwtOptions.Expires);
+            descriptor.SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)), SecurityAlgorithms.HmacSha256Signature);
 
             return handler.CreateEncodedJwt(descriptor);
         }
@@ -113,7 +134,7 @@ namespace BusinessLogicLayer.Auth.Jwt
             Random r = new Random();
             byte[] byteArr = new byte[64];
             r.NextBytes(byteArr);
-            return Encoding.UTF8.GetString(byteArr);
+            return Encoding.ASCII.GetString(byteArr);
         }
     }
 }

@@ -18,13 +18,13 @@ namespace PseudoCRMAPI.Controllers
         }
 
         [HttpGet("login")]
-        public async Task<ActionResult<JwtResult>> Login([FromBody] UserLoginDto user)
+        public async Task<ActionResult<JwtResult>> Login([FromQuery] UserLoginDto user)
         {
             return Ok(await _authService.Login(new JwtAuthLoginParameters{ User = user }));
         }
 
         [HttpGet("refresh")]
-        public async Task<ActionResult<JwtResult>> RefreshToken([FromBody] JwtResult oldResult)
+        public async Task<ActionResult<JwtResult>> RefreshToken([FromQuery] JwtResult oldResult)
         {
             return Ok(await _authService.Login(new JwtAuthLoginParameters{ OldResult = oldResult }));
         }
