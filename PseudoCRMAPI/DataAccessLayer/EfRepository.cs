@@ -64,6 +64,7 @@ namespace DataAccessLayer
             if (oldEntity == null)
             {
                 await CreateAsync(entity);
+                return;
             }
 
             EntityEntry<T?> entry = _context.Entry(oldEntity);
