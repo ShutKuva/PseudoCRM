@@ -10,16 +10,13 @@
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="MailKit" Version="3.6.0" />
     <PackageReference Include="MimeKit" Version="3.6.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogicLayer.Abstractions\BusinessLogicLayer.Abstractions.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\DataAccessLayer.Abstractions\DataAccessLayer.Abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Email\Adapters\" />
   </ItemGroup>
 
 </Project>

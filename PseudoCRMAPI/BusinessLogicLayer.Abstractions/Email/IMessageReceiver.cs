@@ -1,4 +1,4 @@
-﻿namespace BusinessLogicLayer.Abstractions.Email.Adapters
+﻿namespace BusinessLogicLayer.Abstractions.Email
 {
     public interface IMessageReceiver<T, U, E, S>
     {

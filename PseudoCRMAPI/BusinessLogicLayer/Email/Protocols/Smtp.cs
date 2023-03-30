@@ -14,7 +14,12 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            ServerInformation smtpServerInformation = emailCredentials.ServerInformations[ServerProtocols.Smtp];
+            ServerInformation? smtpServerInformation = emailCredentials.ServerInformations.FirstOrDefault(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Smtp) == ServerProtocols.Smtp)?.ServerInformation;
+
+            if (smtpServerInformation == null)
+            {
+                throw new ArgumentException("There is no registered server information for this protocol.");
+            }
 
             using var client = new SmtpClient();
 
