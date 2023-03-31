@@ -9,7 +9,7 @@ type LeftSideProps = Props;
 const LeftSide = (props: LeftSideProps) => {
   return (
     <div className={styles["left-side"]}>
-      <Option icon={<MailIcon />} />
+      <Option path="./mail" icon={<MailIcon />} />
     </div>
   );
 };

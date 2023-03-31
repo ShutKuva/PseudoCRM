@@ -1,5 +1,6 @@
 import Container from "./Container";
 import styles from "./Header.module.css";
+import Login from "./Login";
 import Logo from "./Logo";
 
 interface Props {}
@@ -13,6 +14,7 @@ const Header = (props: HeaderProps) => {
         <div className={styles["vertical-wrapper"]}>
           <div className={styles.wrapper}>
             <Logo />
+            <Login />
           </div>
         </div>
       </Container>
