@@ -1,0 +1,16 @@
+.header {
+  background-color: #377771;
+  flex: 1 0 auto;
+}
+
+.wrapper {
+  display: flex;
+  margin: auto 0;
+  justify-content: space-between;
+}
+.vertical-wrapper {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+}

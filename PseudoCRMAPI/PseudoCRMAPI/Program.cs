@@ -62,7 +62,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMigration();
-
+app.UseCors(config =>
+{
+    config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

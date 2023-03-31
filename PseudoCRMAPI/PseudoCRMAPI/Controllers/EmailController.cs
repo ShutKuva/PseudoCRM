@@ -37,7 +37,7 @@ namespace PseudoCRMAPI.Controllers
         }
 
         [HttpGet("public-names")]
-        public async Task<ActionResult<EmailDto>> GetPublicNames()
+        public async Task<ActionResult<IEnumerable<EmailDto>>> GetPublicNames()
         {
             return Ok(await _emailService.GetRegisteredPublicNames(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value));
         }

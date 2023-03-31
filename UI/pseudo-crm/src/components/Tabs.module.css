@@ -1,0 +1,45 @@
+.public-names {
+  display: flex;
+}
+.public-name {
+  margin: 0 0.5em;
+  color: #1a3835;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 2em;
+  width: 12em;
+  text-decoration: none;
+  overflow-x: hidden;
+  text-align: center;
+  background-color: #f0c0a8;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.public-name:first-child {
+  margin: 0;
+}
+.public-name::before {
+  position: absolute;
+  background-color: transparent;
+  margin-left: 12em;
+  content: "";
+  border-bottom: 2em solid #f0c0a8;
+  border-right: 1em solid transparent;
+  transition: border-bottom 0.2s ease-in-out;
+}
+
+.active {
+  z-index: 2;
+}
+.active.public-name {
+  background-color: #e18151;
+  color: #ffe4d6;
+}
+.public-name:hover {
+  background-color: #e18151;
+  color: #ffe4d6;
+}
+.public-name:hover::before,
+.active.public-name::before {
+  border-bottom: 2em solid #e18151;
+}
