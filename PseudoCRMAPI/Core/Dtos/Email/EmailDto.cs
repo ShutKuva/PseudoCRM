@@ -1,4 +1,4 @@
-﻿namespace Core.Dtos
+﻿namespace Core.Dtos.Email
 {
     public class EmailDto
     {

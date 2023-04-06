@@ -16,7 +16,8 @@ const LoginForm = (props: LoginFormProps) => {
     defaultValues: { login: "", password: "" },
   });
 
-  const clickHandler = () => {
+  const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     handleSubmit((data) => {
       props.onSubmit(data);
     })();
@@ -26,7 +27,11 @@ const LoginForm = (props: LoginFormProps) => {
     <Modal onClose={props.onClose}>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <input {...register("login")} type="text" placeholder="Login" />
-        <input {...register("password")} type="text" placeholder="Password" />
+        <input
+          {...register("password")}
+          type="password"
+          placeholder="Password"
+        />
         <button onClick={clickHandler}>Login</button>
       </div>
     </Modal>

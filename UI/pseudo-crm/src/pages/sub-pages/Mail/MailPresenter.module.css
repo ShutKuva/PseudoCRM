@@ -1,0 +1,29 @@
+.presenter {
+  background-color: #e18151;
+  height: 100%;
+  width: 100%;
+}
+.protocols {
+  padding: 0.2em 0;
+  display: flex;
+}
+.protocol {
+  text-align: center;
+  text-decoration: none;
+  color: #1a3835;
+  padding: 0.3em 0;
+  width: 6em;
+  border-bottom: 0;
+  border-top: 0;
+  border-left: 0;
+  border-right: 2px solid #e18151;
+  background-color: #ffbb99;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.protocol:last-child {
+  border: 0;
+}
+.protocol:hover {
+  background-color: #ff7733;
+  color: #fae4d6;
+}

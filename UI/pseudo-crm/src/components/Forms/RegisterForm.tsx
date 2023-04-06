@@ -3,6 +3,7 @@ import styles from "./RegisterForm.module.css";
 import { RegisterArgs } from "../../interfaces/Register";
 import Modal from "../Modal";
 import Button from "../Button";
+import { ButtonHTMLAttributes } from "react";
 
 interface Props {
   onClose: () => void;
@@ -14,7 +15,8 @@ type RegisterFormProps = Props;
 const RegisterForm = (props: RegisterFormProps) => {
   const { register, handleSubmit } = useForm<RegisterArgs>();
 
-  const clickHandler = () => {
+  const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     handleSubmit((data) => {
       props.onSubmit(data);
     })();
@@ -25,10 +27,10 @@ const RegisterForm = (props: RegisterFormProps) => {
       <form onSubmit={handleSubmit(props.onSubmit)}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <input {...register("login")} type="text" placeholder="Login" />
-          <input {...register("email")} type="text" placeholder="Email" />
+          <input {...register("email")} type="email" placeholder="Email" />
           <input
             {...register("passwordHash")}
-            type="text"
+            type="password"
             placeholder="Password"
           />
           <button onClick={clickHandler}>Register</button>
