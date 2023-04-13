@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Abstractions.Email;
-using BusinessLogicLayer.Abstractions.Email.Adapters;
-using BusinessLogicLayer.Email.Protocols;
+using BusinessLogicLayer.Email.Shared;
 using Core;
-using Core.Dtos;
+using Core.Dtos.Email;
 using Core.Email;
 using Core.Email.Additional;
 using DataAccessLayer.Abstractions;
-using MailKit.Search;
-using MimeKit;
 
 namespace BusinessLogicLayer.Email
 {
-    public class EmailService : IEmailService<User, EmailCredentials>
+    public class EmailService : IEmailService<User, EmailCredentials, ServerInformation>
     {
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<EmailCredentials> _emailRepository;
@@ -41,6 +38,25 @@ namespace BusinessLogicLayer.Email
             await _emailRepository.UpdateAsync(emailCredentials);
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task SetNewServerInfo(User user, EmailCredentials emailCredentials, ServerInformation serverInfo)
+        {
+            emailCredentials.ServerInformations.Add(new EmailCredentialsServerInformation()
+            {
+                EmailCredentialsId = emailCredentials.Id,
+                ServerInformation = serverInfo,
+            });
+
+            emailCredentials.ServerProtocols |= serverInfo.ServerProtocol;
+
+            await _emailRepository.UpdateAsync(emailCredentials);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public Task<bool> CheckServerInfoAvailability(User user, EmailCredentials emailCredentials, ServerInformation serverInfo)
+        {
+            return Task.FromResult((emailCredentials.ServerProtocols & serverInfo.ServerProtocol) == serverInfo.ServerProtocol);
         }
     }
 }

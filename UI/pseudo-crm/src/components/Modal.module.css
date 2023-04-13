@@ -1,4 +1,5 @@
 .modal-back {
+  z-index: 100;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,6 +9,7 @@
   background-color: rgba(0, 0, 0, 50%);
 }
 .modal {
+  z-index: 101;
   position: relative;
   background-color: #ffad99;
   padding: 0.5em;

@@ -5,6 +5,10 @@ import { useDispatch } from "react-redux";
 
 export const authState: Auth = {};
 
+export const REFRESH_TOKEN = "refreshToken";
+export const LOGIN = "login";
+export const TOKEN = "token";
+
 export const AuthSlice = createSlice({
   name: "auth",
   initialState: authState,
@@ -13,6 +17,9 @@ export const AuthSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.login = action.payload.login;
       state.token = action.payload.token;
+      localStorage.setItem(REFRESH_TOKEN, action.payload.refreshToken ?? "");
+      localStorage.setItem(LOGIN, action.payload.login ?? "");
+      localStorage.setItem(TOKEN, action.payload.token ?? "");
     },
   },
 });

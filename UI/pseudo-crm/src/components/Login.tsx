@@ -11,6 +11,8 @@ import axios from "axios";
 import { MAIN_API } from "../consts/url";
 import RegisterForm from "./Forms/RegisterForm";
 import { RegisterArgs } from "../interfaces/Register";
+import NewServerInformation from "./Forms/NewServerInformation";
+import SetNewEmail from "./Forms/SetNewEmail";
 
 interface Props {}
 
@@ -19,6 +21,8 @@ type LoginProps = Props;
 const Login = (props: LoginProps) => {
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
+  const [isSetNewEmailModalVisible, setIsSetNewEmailModalVisible] =
+    useState(false);
   const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useAuthDispatch();
   const { register } = useForm();
@@ -56,6 +60,10 @@ const Login = (props: LoginProps) => {
         />
       )}
 
+      {isSetNewEmailModalVisible && (
+        <SetNewEmail onClose={() => setIsSetNewEmailModalVisible(false)} />
+      )}
+
       <div className={styles.login}>
         {auth.login == undefined ? (
           <>
@@ -75,6 +83,12 @@ const Login = (props: LoginProps) => {
         ) : (
           <>
             <h4>{auth.login}</h4>
+            <Button
+              name="Set new email"
+              onClick={() => {
+                setIsSetNewEmailModalVisible(true);
+              }}
+            />
             <Button
               name="Logout"
               onClick={() => {

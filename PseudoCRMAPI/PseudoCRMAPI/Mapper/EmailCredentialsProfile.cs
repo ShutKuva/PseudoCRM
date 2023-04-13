@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.Dtos;
+using Core.Dtos.Email;
 using Core.Email;
 
 namespace PseudoCRMAPI.Mapper
@@ -9,6 +9,7 @@ namespace PseudoCRMAPI.Mapper
         public EmailCredentialsProfile()
         {
             CreateMap<EmailCredentials, EmailDto>();
+            CreateMap<EmailCredentialsDto, EmailCredentials>();
         }
     }
 }

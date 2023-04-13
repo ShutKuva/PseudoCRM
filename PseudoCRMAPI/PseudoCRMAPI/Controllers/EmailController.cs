@@ -7,7 +7,8 @@ using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.ConstrainedExecution;
-using Core.Dtos;
+using Core.Dtos.Email;
+using BusinessLogicLayer.Abstractions.Email.Adapters;
 
 namespace PseudoCRMAPI.Controllers
 {
@@ -16,18 +17,18 @@ namespace PseudoCRMAPI.Controllers
     [Authorize]
     public class EmailController : ControllerBase
     {
-        private readonly IEmailService<string, EmailCredentials> _emailService;
+        private readonly IEmailService<string, EmailCredentialsDto, ServerInformation> _emailService;
         private readonly IMessageReceiver<IReadOnlyList<EmailTextMessage>, string, string, ServerProtocols> _sharedMessageReceiver;
         private readonly IMessageReceiver<IReadOnlyList<EmailTextMessage>, string, string, SearchQuery> _imapMessageReceiver;
         private readonly IMessageReceiver<IReadOnlyList<EmailTextMessage>, string, string, int> _popMessageReceiver;
         private readonly IMessageSender<string, string, EmailTextMessage> _messageSender;
 
         public EmailController(
-            IEmailService<string, EmailCredentials> emailService,
-            IMessageReceiver<IReadOnlyList<EmailTextMessage>, string, string, ServerProtocols> sharedMessageReceiver,
-            IMessageReceiver<IReadOnlyList<EmailTextMessage>, string, string, SearchQuery> imapMessageReceiver,
-            IMessageReceiver<IReadOnlyList<EmailTextMessage>, string, string, int> popMessageReceiver,
-            IMessageSender<string, string, EmailTextMessage> messageSender)
+            IEmailService<string, EmailCredentialsDto, ServerInformation> emailService,
+            IStringMessageReceiverAdapter<IReadOnlyList<EmailTextMessage>, ServerProtocols> sharedMessageReceiver,
+            IStringMessageReceiverAdapter<IReadOnlyList<EmailTextMessage>, SearchQuery> imapMessageReceiver,
+            IStringMessageReceiverAdapter<IReadOnlyList<EmailTextMessage>, int> popMessageReceiver,
+            IStringMessageSenderAdapter<EmailTextMessage> messageSender)
         {
             _emailService = emailService;
             _sharedMessageReceiver = sharedMessageReceiver;
@@ -43,31 +44,52 @@ namespace PseudoCRMAPI.Controllers
         }
 
         [HttpPost("set-email")]
-        public async Task<OkResult> SetNewEmailCredentials([FromBody] EmailCredentials emailCredentials)
+        public async Task<OkResult> SetNewEmailCredentials([FromBody] EmailCredentialsDto emailCredentials)
         {
             await _emailService.SetNewEmail(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value,
                 emailCredentials);
             return Ok();
         }
 
-        [HttpGet("pop/messages/{publicName}/{getLast}")]
+        [HttpPost("{publicName}/set-server-info")]
+        public async Task<OkResult> SetNewServerInfo(string publicName, [FromBody] ServerInformation serverInformation)
+        {
+            await _emailService.SetNewServerInfo(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value, new EmailCredentialsDto(){PublicName = publicName},
+                serverInformation);
+            return Ok();
+        }
+
+        [HttpGet("{publicName}/pop/messages/{getLast}")]
         public async Task<ActionResult<IReadOnlyList<EmailTextMessage>>> GetMessageWithPop(string publicName, int getLast)
         {
             return Ok(await _popMessageReceiver.GetMessages(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value, publicName, getLast));
         }
 
-        [HttpGet("imap/messages/{publicName}")]
+        [HttpGet("{publicName}/imap/messages")]
         public async Task<ActionResult<IReadOnlyList<EmailTextMessage>>> GetMessageWithImap(string publicName)
         {
             return Ok(await _sharedMessageReceiver.GetMessages(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value, publicName, ServerProtocols.Imap));
         }
 
-        [HttpPost("send/{publicName}")]
-        public async Task<ActionResult<OkObjectResult>> SendMessage(string publicName, [FromBody]EmailTextMessage emailTextMessage)
+        [HttpPost("{publicName}/smtp/send")]
+        public async Task<OkResult> SendMessage(string publicName, [FromBody]EmailTextMessage emailTextMessage)
         {
             await _messageSender.SendMessage(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value, publicName,
                 emailTextMessage);
             return Ok();
+        }
+
+        [HttpGet("{publicName}/{protocol}/check")]
+        public async Task<OkObjectResult> CheckAvailability(string publicName, string protocol)
+        {
+            return Ok(await _emailService.CheckServerInfoAvailability(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value,
+                new EmailCredentialsDto(){PublicName = publicName},
+                new ServerInformation(){ServerProtocol = protocol switch
+                {
+                    "imap" => ServerProtocols.Imap,
+                    "smtp" => ServerProtocols.Smtp,
+                    "pop" => ServerProtocols.Pop
+                }}));
         }
     }
 }

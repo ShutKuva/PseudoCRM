@@ -4,11 +4,11 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace DataAccessLayer
+namespace DataAccessLayer.Repositories
 {
     public class EfRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly CrmDbContext _context;
+        protected readonly CrmDbContext _context;
 
         public EfRepository(CrmDbContext context)
         {
