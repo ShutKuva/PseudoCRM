@@ -92,6 +92,10 @@ namespace BusinessLogicLayer.Auth.Jwt
 
             JwtResult result = await GenerateJwtResult(user);
 
+            user.RefreshToken = result.RefreshToken;
+
+            await _userRepository.UpdateAsync(user);
+
             await _unitOfWork.SaveChangesAsync();
 
             return result;
@@ -102,10 +106,6 @@ namespace BusinessLogicLayer.Auth.Jwt
             JwtResult result = new JwtResult();
             result.Token = GenerateToken(user);
             result.RefreshToken = GenerateRefreshToken();
-
-            user.RefreshToken = result.RefreshToken;
-
-            await _userRepository.UpdateAsync(user);
 
             return result;
         }
