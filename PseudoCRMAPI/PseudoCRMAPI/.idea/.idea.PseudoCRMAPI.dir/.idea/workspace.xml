@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dede9aae-e97c-4386-b164-1e4f43ff4610" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/Auth/IAuthService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/BusinessLogicLayer.Abstractions.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/Email/Adapters/IStringMessageReceiverAdapter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/Email/Adapters/IStringMessageSenderAdapter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/Email/IEmailService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/Email/IMessageReceiver.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer.Abstractions/Email/IMessageSender.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Auth/Jwt/JwtAuthService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Auth/StringHasher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Adapters/EmailServiceStringAdapter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Adapters/MessageReceiverAdapter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Adapters/MessageSenderAdapter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/EmailService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Protocols/Imap.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Protocols/Pop.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Protocols/Smtp.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Services/ImapAndPopMessageService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Services/ImapMessageService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Services/PopMessageService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Services/SmtpMessageService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BusinessLogicLayer/Email/Shared/EmailShared.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Auth/Jwt/JwtConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Auth/Jwt/Parameters/ClaimNames.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Auth/Jwt/Parameters/JwtAuthLoginParameters.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Auth/Jwt/Parameters/JwtAuthRegistrationParameters.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Auth/Jwt/Results/JwtResult.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Dtos/EmailDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Dtos/User/UserLoginDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Dtos/User/UserRegistrationDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Email/Additional/ServerInformation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Email/Additional/ServerProtocols.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Email/EmailCredentials.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Email/EmailCredentialsServerInformation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Core/Email/EmailTextMessage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer.Abstractions/DataAccessLayer.Abstractions.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer.Abstractions/IRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer.Abstractions/IUnitOfWork.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer/EfRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer/EfUnitOfWork.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer/Migrations/20230330173126_Start.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer/Migrations/20230330173126_Start.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DataAccessLayer/Migrations/CrmDbContextModelSnapshot.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/EmailController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/JwtAuthController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Extensions/MigrationExtension.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mapper/EmailAddressProfile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mapper/EmailCredentialsProfile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mapper/EmailTextMessageProfile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mapper/UserProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BusinessLogicLayer/BusinessLogicLayer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../BusinessLogicLayer/BusinessLogicLayer.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Core/BaseEntities/BaseEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Core/BaseEntities/BaseEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Core/Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Core/Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Core/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Core/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DataAccessLayer/CrmDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataAccessLayer/CrmDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DataAccessLayer/DataAccessLayer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../DataAccessLayer/DataAccessLayer.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PseudoCRMAPI.sln" beforeDir="false" afterPath="$PROJECT_DIR$/../PseudoCRMAPI.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PseudoCRMAPI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/PseudoCRMAPI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2NkIWgoYIkjlAQHCdB3xoZPArc3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dede9aae-e97c-4386-b164-1e4f43ff4610" name="Changes" comment="" />
+      <created>1680201694164</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1680201694164</updated>
+      <workItem from="1680201698498" duration="11000" />
+    </task>
+    <servers />
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>

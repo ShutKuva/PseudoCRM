@@ -6,11 +6,13 @@ using BusinessLogicLayer.Email;
 using BusinessLogicLayer.Email.Adapters;
 using BusinessLogicLayer.Email.Services;
 using Core;
+using Core.Abstractions.Shared;
 using Core.Auth.Jwt;
 using Core.Auth.Jwt.Parameters;
 using Core.Auth.Jwt.Results;
 using Core.Email;
 using Core.Email.Additional;
+using Core.Shared;
 using DataAccessLayer;
 using DataAccessLayer.Abstractions;
 using MailKit.Search;
@@ -20,8 +22,6 @@ using MimeKit;
 using PseudoCRMAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -47,6 +47,8 @@ builder.Services.AddScoped<IMessageReceiver<IReadOnlyList<MimeMessage>, User, st
 builder.Services.AddScoped<IMessageSender<User, string, MimeMessage>, SmtpMessageService>();
 
 builder.Services.AddScoped<IAuthService<JwtAuthLoginParameters, JwtAuthRegistrationParameters, JwtResult, JwtResult>, JwtAuthService>();
+
+builder.Services.AddScoped<IClock, Clock>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
