@@ -72,11 +72,24 @@ namespace PseudoCRMAPI.Controllers
         }
 
         [HttpPost("{publicName}/smtp/send")]
-        public async Task<ActionResult<OkObjectResult>> SendMessage(string publicName, [FromBody]EmailTextMessage emailTextMessage)
+        public async Task<OkResult> SendMessage(string publicName, [FromBody]EmailTextMessage emailTextMessage)
         {
             await _messageSender.SendMessage(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value, publicName,
                 emailTextMessage);
             return Ok();
+        }
+
+        [HttpGet("{publicName}/{protocol}/check")]
+        public async Task<OkObjectResult> CheckAvailability(string publicName, string protocol)
+        {
+            return Ok(await _emailService.CheckServerInfoAvailability(User.Claims.FirstOrDefault(c => c.Type == ClaimNames.Id).Value,
+                new EmailCredentialsDto(){PublicName = publicName},
+                new ServerInformation(){ServerProtocol = protocol switch
+                {
+                    "imap" => ServerProtocols.Imap,
+                    "smtp" => ServerProtocols.Smtp,
+                    "pop" => ServerProtocols.Pop
+                }}));
         }
     }
 }

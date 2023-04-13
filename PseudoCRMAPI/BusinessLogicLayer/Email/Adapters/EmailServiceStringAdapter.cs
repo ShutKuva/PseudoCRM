@@ -20,6 +20,13 @@ namespace BusinessLogicLayer.Email.Adapters
             _mapper = mapper;
         }
 
+        public async Task<bool> CheckServerInfoAvailability(string user, EmailCredentialsDto emailCredentials, ServerInformation serverInfo)
+        {
+            User userObj = await GetUserById(user);
+            EmailCredentials emailCredentialsObj = TryGetEmailCredentials(userObj, emailCredentials.PublicName);
+            return await _emailService.CheckServerInfoAvailability(userObj, emailCredentialsObj, serverInfo);
+        }
+
         public async Task<IEnumerable<EmailDto>> GetRegisteredPublicNames(string user)
         {
             return await _emailService.GetRegisteredPublicNames(await GetUserById(user));

@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Abstractions.Email;
-using BusinessLogicLayer.Abstractions.Email.Adapters;
-using BusinessLogicLayer.Email.Protocols;
+using BusinessLogicLayer.Email.Shared;
 using Core;
 using Core.Dtos.Email;
 using Core.Email;
 using Core.Email.Additional;
 using DataAccessLayer.Abstractions;
-using MailKit.Search;
-using MimeKit;
 
 namespace BusinessLogicLayer.Email
 {
@@ -45,18 +42,21 @@ namespace BusinessLogicLayer.Email
 
         public async Task SetNewServerInfo(User user, EmailCredentials emailCredentials, ServerInformation serverInfo)
         {
-            EmailCredentials existedCredentials = user.Emails.FirstOrDefault(e => e.PublicName == emailCredentials.PublicName);
-            if (existedCredentials != null)
+            emailCredentials.ServerInformations.Add(new EmailCredentialsServerInformation()
             {
-                throw new ArgumentException("There is no email with this public name");
-            }
-            existedCredentials.ServerInformations.Add(new EmailCredentialsServerInformation()
-            {
-                EmailCredentialsId = existedCredentials.Id,
+                EmailCredentialsId = emailCredentials.Id,
                 ServerInformation = serverInfo,
             });
-            await _emailRepository.UpdateAsync(existedCredentials);
+
+            emailCredentials.ServerProtocols |= serverInfo.ServerProtocol;
+
+            await _emailRepository.UpdateAsync(emailCredentials);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public Task<bool> CheckServerInfoAvailability(User user, EmailCredentials emailCredentials, ServerInformation serverInfo)
+        {
+            return Task.FromResult((emailCredentials.ServerProtocols & serverInfo.ServerProtocol) == serverInfo.ServerProtocol);
         }
     }
 }

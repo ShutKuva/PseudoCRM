@@ -1,6 +1,4 @@
-﻿using Core.Email;
-using Core;
-using Core.Dtos.Email;
+﻿using Core.Dtos.Email;
 
 namespace BusinessLogicLayer.Abstractions.Email
 {
@@ -9,5 +7,6 @@ namespace BusinessLogicLayer.Abstractions.Email
         Task SetNewEmail(U user, E emailCredentials);
         Task SetNewServerInfo(U user, E emailCredentials, S serverInfo);
         Task<IEnumerable<EmailDto>> GetRegisteredPublicNames(U user);
+        Task<bool> CheckServerInfoAvailability(U user, E emailCredentials, S serverInfo);
     }
 }
