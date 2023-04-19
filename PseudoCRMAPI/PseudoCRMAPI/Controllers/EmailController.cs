@@ -91,5 +91,12 @@ namespace PseudoCRMAPI.Controllers
                     "pop" => ServerProtocols.Pop
                 }}));
         }
+
+        [AllowAnonymous]
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok("Test");
+        }
     }
 }

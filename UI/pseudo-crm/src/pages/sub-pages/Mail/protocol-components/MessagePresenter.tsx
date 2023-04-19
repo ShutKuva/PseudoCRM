@@ -1,4 +1,4 @@
-import { useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import styles from "./MessagePresenter.module.css";
 import { ServerError } from "../../../../interfaces/ServerError";
 import { EmailTextMessage } from "../../../../interfaces/EmailTextMessage";
@@ -13,18 +13,25 @@ type MessagePresenterProps = Props;
 
 const MessagePresenter = (props: MessagePresenterProps) => {
   const params = useLoaderData() as EmailTextMessage[] | ServerError;
+  const navigate = useNavigate();
   const [
     isNewServerInformationFormVisible,
     setIsNewServerInformationFormVisible,
   ] = useState(false);
 
+  function onSubmitHandler() {
+    setIsNewServerInformationFormVisible(false);
+  }
+
+  function onCloseHandler() {
+    setIsNewServerInformationFormVisible(false);
+  }
+
   return (
     <div className={styles.presenter}>
       {isNewServerInformationFormVisible && (
-        <Modal onClose={() => setIsNewServerInformationFormVisible(false)}>
-          <NewServerInformation
-            onSubmit={() => setIsNewServerInformationFormVisible(false)}
-          />
+        <Modal onClose={onCloseHandler}>
+          <NewServerInformation onSubmit={onSubmitHandler} />
         </Modal>
       )}
       {"message" in params ? (

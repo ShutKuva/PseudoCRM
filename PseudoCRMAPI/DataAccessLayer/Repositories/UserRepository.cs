@@ -5,25 +5,40 @@ using System.Linq.Expressions;
 
 namespace DataAccessLayer.Repositories
 {
-    public class UserRepository : EfRepository<User>, IRepository<User>
+    public class UserRepository : EfRepository<User>
     {
         public UserRepository(CrmDbContext dbContext) : base(dbContext)
         {
         }
 
-        public new Task<User?> ReadAsync(Expression<Func<User, bool>> predicate)
+        public override Task<User?> ReadAsync(Expression<Func<User, bool>> predicate)
         {
-            return _context.Users.Include(user => user.Emails).Where(predicate).FirstOrDefaultAsync();
+            return _context.Users.Include(user => user.Emails)
+                .ThenInclude(email => email.ServerInformations)
+                .ThenInclude(si => si.ServerInformation)
+                .Where(predicate)
+                .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<User> ReadByCondition(Expression<Func<User, bool>> predicate, int skip, int take)
+        public override IEnumerable<User> ReadByCondition(Expression<Func<User, bool>> predicate, int skip, int take)
         {
-            return _context.Users.Include(user => user.Emails).Where(predicate).Skip(skip).Take(take);
+            return _context.Users.Include(user => user.Emails)
+                .ThenInclude(email => email.ServerInformations)
+                .ThenInclude(si => si.ServerInformation)
+                .Where(predicate)
+                .Skip(skip)
+                .Take(take);
         }
 
-        public Task<IEnumerable<User>> ReadByConditionAsync(Expression<Func<User, bool>> predicate, int skip, int take)
+        public override Task<IEnumerable<User>> ReadByConditionAsync(Expression<Func<User, bool>> predicate, int skip, int take)
         {
-            return Task.FromResult(_context.Users.Include(user => user.Emails).Where(predicate).Skip(skip).Take(take).AsEnumerable());
+            return Task.FromResult(_context.Users.Include(user => user.Emails)
+                .ThenInclude(email => email.ServerInformations)
+                .ThenInclude(si => si.ServerInformation)
+                .Where(predicate)
+                .Skip(skip)
+                .Take(take)
+                .AsEnumerable());
         }
     }
 }

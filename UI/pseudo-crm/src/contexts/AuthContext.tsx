@@ -1,9 +1,10 @@
-import { createContext } from "react";
 import { Auth } from "../interfaces/Auth";
 import { PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
+import { OAuthState } from "../interfaces/OAuth";
 
 export const authState: Auth = {};
+export const oauthState: OAuthState = {};
 
 export const REFRESH_TOKEN = "refreshToken";
 export const LOGIN = "login";
@@ -24,9 +25,24 @@ export const AuthSlice = createSlice({
   },
 });
 
+export const OAuthSlice = createSlice({
+  name: "oauth",
+  initialState: oauthState,
+  reducers: {
+    setState: (state, action: PayloadAction<OAuthState>) => {
+      state.state = action.payload.state ?? state.state;
+      state.code = action.payload.code ?? state.code;
+    },
+  },
+});
+
 export const { setTokens } = AuthSlice.actions;
 const reducer = AuthSlice.reducer;
-export const AuthStore = configureStore({ reducer: { auth: reducer } });
+export const { setState } = OAuthSlice.actions;
+const oreducer = OAuthSlice.reducer;
+export const AuthStore = configureStore({
+  reducer: { auth: reducer, oauth: oreducer },
+});
 export type AuthDispatch = typeof AuthStore.dispatch;
 export type AuthDispatchFunc = () => AuthDispatch;
 export const useAuthDispatch: AuthDispatchFunc = useDispatch;

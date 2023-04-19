@@ -3,10 +3,20 @@ import Button from "../Button";
 import Modal from "../Modal";
 import styles from "./LoginForm.module.css";
 import { LoginArgs } from "../../interfaces/Login";
+import { MAIN_API } from "../../consts/url";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { oauthAuthenticate } from "../../services/oauth/OAuthService";
+import { Auth } from "../../interfaces/Auth";
+import { useDispatch } from "react-redux";
+import {
+  setState,
+  setTokens,
+  useAuthDispatch,
+} from "../../contexts/AuthContext";
 
 interface Props {
   onClose: () => void;
-  onSubmit: (data: LoginArgs) => void;
 }
 
 type LoginFormProps = Props;
@@ -16,11 +26,22 @@ const LoginForm = (props: LoginFormProps) => {
     defaultValues: { login: "", password: "" },
   });
 
+  const dispatch = useAuthDispatch();
+
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    handleSubmit((data) => {
-      props.onSubmit(data);
+    handleSubmit(async (data) => {
+      const credentials = await axios.get<Auth>(
+        `JwtAuth/login?Name=${data.login}&PasswordHash=${data.password}`,
+        { baseURL: MAIN_API }
+      );
+      dispatch(setTokens({ ...credentials.data, login: data.login }));
+      props.onClose();
     })();
+  };
+
+  const authHandler = () => {
+    oauthAuthenticate("figma", (state) => dispatch(setState({ state })));
   };
 
   return (
@@ -32,6 +53,7 @@ const LoginForm = (props: LoginFormProps) => {
           type="password"
           placeholder="Password"
         />
+        <button onClick={authHandler}>Login with Figma</button>
         <button onClick={clickHandler}>Login</button>
       </div>
     </Modal>

@@ -15,17 +15,17 @@ namespace DataAccessLayer.Repositories
             _context = context;
         }
 
-        public void Create(T entity)
+        public virtual void Create(T entity)
         {
             _context.Add(entity);
         }
 
-        public Task CreateAsync(T entity)
+        public virtual Task CreateAsync(T entity)
         {
             return _context.AddAsync(entity).AsTask();
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             if (entity == null)
             {
@@ -34,7 +34,7 @@ namespace DataAccessLayer.Repositories
             _context.Remove(entity);
         }
 
-        public async Task DeleteAsync(T entity)
+        public virtual async Task DeleteAsync(T entity)
         {
             if (entity == null)
             {
@@ -43,22 +43,22 @@ namespace DataAccessLayer.Repositories
             _context.Remove(entity);
         }
 
-        public Task<T?> ReadAsync(Expression<Func<T, bool>> predicate)
+        public virtual Task<T?> ReadAsync(Expression<Func<T, bool>> predicate)
         {
             return _context.Set<T>().Where(predicate).FirstOrDefaultAsync();
         }
 
-        public IEnumerable<T> ReadByCondition(Expression<Func<T, bool>> predicate, int skip, int take)
+        public virtual IEnumerable<T> ReadByCondition(Expression<Func<T, bool>> predicate, int skip, int take)
         {
             return _context.Set<T>().Where(predicate).Skip(skip).Take(take);
         }
 
-        public Task<IEnumerable<T>> ReadByConditionAsync(Expression<Func<T, bool>> predicate, int skip, int take)
+        public virtual Task<IEnumerable<T>> ReadByConditionAsync(Expression<Func<T, bool>> predicate, int skip, int take)
         {
             return Task.FromResult(_context.Set<T>().Where(predicate).Skip(skip).Take(take).AsEnumerable());
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             T? oldEntity = await ReadAsync(e => e.Id == entity.Id);
             if (oldEntity == null)

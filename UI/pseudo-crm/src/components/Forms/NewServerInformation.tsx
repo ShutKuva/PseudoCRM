@@ -20,13 +20,19 @@ const NewServerInformation = (props: NewServerInformationProps) => {
 
   function submitHandler() {
     handleSubmit((data) => {
+      data.secureSocketOptions = new Number(data.secureSocketOptions).valueOf();
+      data.serverProtocol = new Number(data.serverProtocol).valueOf();
       axios
-        .post<ServerInformation>(`${params.publicName}/set-server-info`, data, {
-          baseURL: MAIN_API,
-          headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        .post<ServerInformation>(
+          `email/${params.publicName}/set-server-info`,
+          data,
+          {
+            baseURL: MAIN_API,
+            headers: { Authorization: `Bearer ${auth.token}` },
+          }
+        )
         .then(() => props.onSubmit());
-    });
+    })();
   }
 
   return (

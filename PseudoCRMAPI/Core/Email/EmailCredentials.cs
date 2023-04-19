@@ -9,7 +9,7 @@ namespace Core.Email
         public string Login { get; set; } = null!;
         public string Password { get; set; } = null!;
         public ServerProtocols ServerProtocols { get; set; }
-        public List<EmailCredentialsServerInformation> ServerInformations { get; set; }
+        public List<EmailCredentialsServerInformation> ServerInformations { get; set; } = new List<EmailCredentialsServerInformation>();
 
         public int? UserId { get; set; }
     }

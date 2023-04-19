@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
-import styles from "./RegisterForm.module.css";
 import { RegisterArgs } from "../../interfaces/Register";
 import Modal from "../Modal";
-import Button from "../Button";
-import { ButtonHTMLAttributes } from "react";
+import { Auth } from "../../interfaces/Auth";
+import { setTokens, useAuthDispatch } from "../../contexts/AuthContext";
+import axios from "axios";
+import { MAIN_API } from "../../consts/url";
 
 interface Props {
   onClose: () => void;
-  onSubmit: (data: RegisterArgs) => void;
 }
 
 type RegisterFormProps = Props;
@@ -15,16 +15,22 @@ type RegisterFormProps = Props;
 const RegisterForm = (props: RegisterFormProps) => {
   const { register, handleSubmit } = useForm<RegisterArgs>();
 
+  const dispatch = useAuthDispatch();
+
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    handleSubmit((data) => {
-      props.onSubmit(data);
+    handleSubmit(async (data) => {
+      const credentials = await axios.post<Auth>("JwtAuth/register", data, {
+        baseURL: MAIN_API,
+      });
+      dispatch(setTokens({ ...credentials.data, login: data.login }));
+      props.onClose();
     })();
   };
 
   return (
     <Modal onClose={props.onClose}>
-      <form onSubmit={handleSubmit(props.onSubmit)}>
+      <form>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <input {...register("login")} type="text" placeholder="Login" />
           <input {...register("email")} type="email" placeholder="Email" />

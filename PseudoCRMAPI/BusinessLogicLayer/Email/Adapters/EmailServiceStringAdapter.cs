@@ -39,8 +39,9 @@ namespace BusinessLogicLayer.Email.Adapters
 
         public async Task SetNewServerInfo(string user, EmailCredentialsDto emailCredentials, ServerInformation serverInfo)
         {
-            await _emailService.SetNewServerInfo(await GetUserById(user),
-                _mapper.Map<EmailCredentials>(emailCredentials), serverInfo);
+            User userObj = await GetUserById(user);
+            await _emailService.SetNewServerInfo(userObj,
+                TryGetEmailCredentials(userObj, emailCredentials.PublicName), serverInfo);
         }
     }
 }

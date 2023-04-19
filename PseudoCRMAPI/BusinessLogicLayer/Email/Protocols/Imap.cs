@@ -16,34 +16,42 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            ServerInformation? imapServerInformation = emailCredentials.ServerInformations.FirstOrDefault(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Imap) == ServerProtocols.Imap)?.ServerInformation;
+            IEnumerable<ServerInformation> imapServerInformation = emailCredentials.ServerInformations.Where(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Imap) == ServerProtocols.Imap).Select(si => si.ServerInformation);
 
-            if (imapServerInformation == null)
+            foreach (ServerInformation si in imapServerInformation)
             {
-                throw new ArgumentException("There is no registered server information for this protocol.");
+                List<MimeMessage> result = new List<MimeMessage>();
+
+                try
+                {
+                    using var client = new ImapClient();
+                    client.ServerCertificateValidationCallback = (a, b, c, d) => true;
+                    await client.ConnectAsync(si.Server, si.Port);
+
+                    await client.AuthenticateAsync(emailCredentials.Login, emailCredentials.Password);
+
+                    await client.Inbox.OpenAsync(FolderAccess.ReadOnly);
+
+                    var uids = await client.Inbox.SearchAsync(searchQuery ?? SearchQuery.All);
+
+                    foreach (var uid in uids)
+                    {
+                        var message = await client.Inbox.GetMessageAsync(uid);
+
+                        result.Add(message);
+                    }
+
+                    await client.DisconnectAsync(true);
+
+                    return result;
+                }
+                catch
+                {
+                    continue;
+                }
             }
 
-            List<MimeMessage> result = new List<MimeMessage>();
-
-            using var client = new ImapClient();
-            await client.ConnectAsync(imapServerInformation.Server, imapServerInformation.Port, imapServerInformation.SecureSocketOptions);
-
-            await client.AuthenticateAsync(emailCredentials.Login, emailCredentials.Password);
-
-            await client.Inbox.OpenAsync(FolderAccess.ReadOnly);
-
-            var uids = await client.Inbox.SearchAsync(searchQuery ?? SearchQuery.All);
-
-            foreach (var uid in uids)
-            {
-                var message = await client.Inbox.GetMessageAsync(uid);
-
-                result.Add(message);
-            }
-
-            await client.DisconnectAsync(true);
-
-            return result;
+            throw new ArgumentException("There is no registered server information for this protocol.");
         }
     }
 }

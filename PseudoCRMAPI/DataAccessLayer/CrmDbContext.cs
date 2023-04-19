@@ -8,6 +8,7 @@ namespace DataAccessLayer
     public class CrmDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<EmailCredentials> EmailCredentials { get; set; }
 
         public CrmDbContext(DbContextOptions<CrmDbContext> options) : base(options)
         {

@@ -23,7 +23,9 @@ const Message = (props: MessageProps) => {
           return <h5 className={styles.human}>{v}</h5>;
         })}
       </div>
-      <h4></h4>
+      <h4 style={{ width: "100%", overflowWrap: "normal" }}>
+        {props.message.text}
+      </h4>
     </div>
   );
 };

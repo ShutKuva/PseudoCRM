@@ -1,4 +1,3 @@
-using System.Text;
 using BusinessLogicLayer.Abstractions.Auth;
 using BusinessLogicLayer.Abstractions.Email;
 using BusinessLogicLayer.Abstractions.Email.Adapters;
@@ -24,11 +23,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using PseudoCRMAPI.Extensions;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -39,7 +38,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     {
         ValidateIssuer = false,
         ValidateAudience = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]))
+        IssuerSigningKey =
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]))
     };
 });
 
@@ -47,6 +47,7 @@ builder.Services.AddDbContext<CrmDbContext>(options => options.UseSqlServer(buil
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
+builder.Services.AddScoped<IRepository<EmailCredentials>, EmailCredentialsRepository>();
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddScoped(typeof(IStringMessageSenderAdapter<>), typeof(MessageSenderAdapter<>));
 builder.Services.AddScoped(typeof(IStringMessageReceiverAdapter<,>), typeof(MessageReceiverAdapter<,>));
