@@ -16,7 +16,9 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            IEnumerable<ServerInformation> imapServerInformation = emailCredentials.ServerInformations.Where(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Imap) == ServerProtocols.Imap).Select(si => si.ServerInformation);
+            IEnumerable<ServerInformation> imapServerInformation = emailCredentials.ServerInformations
+                .Where(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Imap) == ServerProtocols.Imap)
+                .Select(si => si.ServerInformation);
 
             foreach (ServerInformation si in imapServerInformation)
             {

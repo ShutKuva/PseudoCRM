@@ -14,22 +14,34 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            ServerInformation? smtpServerInformation = emailCredentials.ServerInformations.FirstOrDefault(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Smtp) == ServerProtocols.Smtp)?.ServerInformation;
+            IEnumerable<ServerInformation> smtpServerInformation = emailCredentials.ServerInformations
+                .Where(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Smtp) == ServerProtocols.Smtp)
+                .Select(si => si.ServerInformation);
 
-            if (smtpServerInformation == null)
+            foreach (ServerInformation si in smtpServerInformation)
             {
-                throw new ArgumentException("There is no registered server information for this protocol.");
+                try
+                {
+                    using var client = new SmtpClient();
+                    client.ServerCertificateValidationCallback = (a, b, c, d) => true;
+
+                    await client.ConnectAsync(si.Server, si.Port, si.SecureSocketOptions);
+
+                    await client.AuthenticateAsync(emailCredentials.Login, emailCredentials.Password);
+
+                    await client.SendAsync(message);
+
+                    await client.DisconnectAsync(true);
+
+                    return;
+                }
+                catch
+                {
+                    continue;
+                }
             }
-
-            using var client = new SmtpClient();
-
-            await client.ConnectAsync(smtpServerInformation.Server, smtpServerInformation.Port, smtpServerInformation.SecureSocketOptions);
             
-            await client.AuthenticateAsync(emailCredentials.Login, emailCredentials.Password);
-
-            await client.SendAsync(message);
-
-            await client.DisconnectAsync(true);
+            throw new ArgumentException("There is no registered server information for this protocol.");
         }
     }
 }

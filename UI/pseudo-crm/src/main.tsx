@@ -1,7 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createHashRouter,
+  RouterProvider,
+} from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import CrmPresenter from "./pages/sub-pages/CrmPresenter";
 import MailSubPage from "./pages/sub-pages/Mail/MailSubPage";
@@ -16,7 +20,7 @@ import { MAIN_API } from "./consts/url";
 import { EmailTextMessage } from "./interfaces/EmailTextMessage";
 import MessageSender from "./pages/sub-pages/Mail/protocol-components/MessageSender";
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "",
     element: <MainPage />,
@@ -92,14 +96,16 @@ const router = createHashRouter([
                   {
                     path: "smtp",
                     loader: async ({ params: { publicName } }) => {
-                      return await axios.get(`${publicName}/smtp/check`, {
-                        baseURL: MAIN_API,
-                        headers: {
-                          Authorization: `Bearer ${localStorage.getItem(
-                            TOKEN
-                          )}`,
-                        },
-                      });
+                      return await axios
+                        .get(`email/${publicName}/smtp/check`, {
+                          baseURL: MAIN_API,
+                          headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                              TOKEN
+                            )}`,
+                          },
+                        })
+                        .then((response) => response.data);
                     },
                     element: <MessageSender />,
                   },
