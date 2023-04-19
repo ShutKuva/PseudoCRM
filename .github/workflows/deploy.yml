@@ -20,4 +20,4 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist # depends on project configurations
+          folder: ./UI/pseudo-crm/dist # depends on project configurations
