@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import CrmPresenter from "./pages/sub-pages/CrmPresenter";
 import MailSubPage from "./pages/sub-pages/Mail/MailSubPage";
@@ -11,18 +11,28 @@ import { Provider } from "react-redux";
 import { AuthStore, TOKEN } from "./contexts/AuthContext";
 import axios, { AxiosError } from "axios";
 import MailPresenter from "./pages/sub-pages/Mail/MailPresenter";
-import { Protocol } from "./interfaces/Protocol";
 import MessagePresenter from "./pages/sub-pages/Mail/protocol-components/MessagePresenter";
 import { MAIN_API } from "./consts/url";
 import { EmailTextMessage } from "./interfaces/EmailTextMessage";
 import MessageSender from "./pages/sub-pages/Mail/protocol-components/MessageSender";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "",
     element: <MainPage />,
     children: [
       { path: "", element: <MainSubPage /> },
+      {
+        path: "auth",
+        children: [
+          {
+            path: ":service",
+            loader: ({ request }) => {
+              return request.url;
+            },
+          },
+        ],
+      },
       {
         path: "crm",
         element: <CrmPresenter />,
@@ -39,17 +49,19 @@ const router = createBrowserRouter([
                     path: "imap",
                     loader: async ({ params: { publicName } }) => {
                       try {
-                        return await axios.get<EmailTextMessage[]>(
-                          `Email/${publicName}/imap/messages`,
-                          {
-                            baseURL: MAIN_API,
-                            headers: {
-                              Authorization: `Bearer ${localStorage.getItem(
-                                TOKEN
-                              )}`,
-                            },
-                          }
-                        );
+                        return await axios
+                          .get<EmailTextMessage[]>(
+                            `Email/${publicName}/imap/messages`,
+                            {
+                              baseURL: MAIN_API,
+                              headers: {
+                                Authorization: `Bearer ${localStorage.getItem(
+                                  TOKEN
+                                )}`,
+                              },
+                            }
+                          )
+                          .then((response) => response.data);
                       } catch (e) {
                         return { message: (e as AxiosError).cause?.message };
                       }

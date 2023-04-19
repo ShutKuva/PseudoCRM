@@ -1,0 +1,22 @@
+name: Deploy
+on: push
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS ⭐
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install and Build 🔧
+        run: |
+          yarn install
+          yarn build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist # depends on project configurations
