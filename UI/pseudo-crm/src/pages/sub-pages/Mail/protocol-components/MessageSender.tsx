@@ -59,14 +59,14 @@ const MessageSender = (props: MessageSenderProps) => {
       data.from = fromEmails;
       data.to = toEmails;
       axios
-        .post<EmailTextMessage>(`${params.publicName}/smtp/send`, data, {
+        .post<EmailTextMessage>(`email/${params.publicName}/smtp/send`, data, {
           baseURL: MAIN_API,
           headers: { Authorization: `Bearer ${auth.token}` },
         })
         .then(() => {
           navigate("");
         });
-    });
+    })();
   }
 
   return (
@@ -79,7 +79,14 @@ const MessageSender = (props: MessageSenderProps) => {
         </Modal>
       )}
       {(loaderParams as boolean) ? (
-        <form>
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "50%",
+            margin: "0 auto",
+          }}
+        >
           <input type="text" placeholder="Subject" {...register("subject")} />
           <input type="text" ref={toRef} />
           <button onClick={newReceiverHandler("to")}>Add new receiver</button>

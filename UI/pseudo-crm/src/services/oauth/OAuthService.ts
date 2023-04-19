@@ -2,7 +2,7 @@ import axios from "axios";
 import { oauthConfigs } from "../../consts/url";
 
 const lengthOfState = 64;
-const alphabet = "#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 const countState = () => {
   let result: string[] = [];

@@ -15,9 +15,16 @@ namespace PseudoCRMAPI.Mapper
 
     public class EmailTextMessageToMimeMessageConverter : ITypeConverter<EmailTextMessage, MimeMessage>
     {
+        private readonly IMapper _mapper;
+
+        public EmailTextMessageToMimeMessageConverter(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         public MimeMessage Convert(EmailTextMessage source, MimeMessage destination, ResolutionContext context)
         {
-            return new MimeMessage(source.From, source.To, source.Subject, new TextPart("plain", source.Text));
+            return new MimeMessage(_mapper.Map<IEnumerable<MailboxAddress>>(source.From), _mapper.Map<IEnumerable<MailboxAddress>>(source.To), source.Subject, new TextPart("plain", source.Text));
         }
     }
 }

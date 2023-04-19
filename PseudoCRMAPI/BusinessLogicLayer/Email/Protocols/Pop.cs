@@ -1,9 +1,6 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Core.Email;
+﻿using Core.Email;
 using Core.Email.Additional;
-using MailKit;
 using MailKit.Net.Pop3;
-using MailKit.Search;
 using MimeKit;
 
 namespace BusinessLogicLayer.Email.Protocols
@@ -17,24 +14,36 @@ namespace BusinessLogicLayer.Email.Protocols
                 throw new ArgumentException(nameof(emailCredentials));
             }
 
-            ServerInformation? popServerInformation = emailCredentials.ServerInformations.FirstOrDefault(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Pop) == ServerProtocols.Pop)?.ServerInformation;
+            IEnumerable<ServerInformation> popServerInformation = emailCredentials.ServerInformations
+                .Where(si => (si.ServerInformation.ServerProtocol & ServerProtocols.Pop) == ServerProtocols.Pop)
+                .Select(si => si.ServerInformation);
 
-            if (popServerInformation == null)
+            foreach (ServerInformation si in popServerInformation)
             {
-                throw new ArgumentException("There is no registered server information for this protocol.");
+                try
+                {
+                    using Pop3Client client = new Pop3Client();
+                    client.ServerCertificateValidationCallback = (a, b, c, d) => true;
+                    await client.ConnectAsync(si.Server, si.Port, si.SecureSocketOptions);
+
+                    await client.AuthenticateAsync(emailCredentials.Login, emailCredentials.Password);
+
+                    IList<MimeMessage> result = await client.GetMessagesAsync(Enumerable
+                        .Range(
+                            client.Count - (takeLast == 0 ? client.Count : takeLast) < 0 ? 0 : client.Count - takeLast,
+                            client.Count).ToList());
+
+                    await client.DisconnectAsync(true);
+
+                    return result.AsReadOnly();
+                }
+                catch
+                {
+                    continue;
+                }
             }
 
-            using Pop3Client client = new Pop3Client();
-
-            await client.ConnectAsync(popServerInformation.Server, popServerInformation.Port, popServerInformation.SecureSocketOptions);
-
-            await client.AuthenticateAsync(emailCredentials.Login, emailCredentials.Password);
-
-            IList<MimeMessage> result =  await client.GetMessagesAsync(Enumerable.Range(client.Count - (takeLast == 0 ? client.Count : takeLast) < 0 ? 0 : client.Count - takeLast, client.Count).ToList());
-
-            await client.DisconnectAsync(true);
-
-            return result.AsReadOnly();
+            throw new ArgumentException("There is no registered server information for this protocol.");
         }
     }
 }
