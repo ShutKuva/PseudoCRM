@@ -92,14 +92,17 @@ const router = createHashRouter([
                   {
                     path: "smtp",
                     loader: async ({ params: { publicName } }) => {
-                      return await axios.get(`${publicName}/smtp/check`, {
-                        baseURL: MAIN_API,
-                        headers: {
-                          Authorization: `Bearer ${localStorage.getItem(
-                            TOKEN
-                          )}`,
-                        },
-                      });
+                      return await axios.get(
+                        `/email/${publicName}/smtp/check`,
+                        {
+                          baseURL: MAIN_API,
+                          headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                              TOKEN
+                            )}`,
+                          },
+                        }
+                      );
                     },
                     element: <MessageSender />,
                   },

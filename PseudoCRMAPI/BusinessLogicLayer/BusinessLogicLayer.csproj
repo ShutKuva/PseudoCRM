@@ -8,8 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="MailKit" Version="3.6.0" />
     <PackageReference Include="MimeKit" Version="3.6.1" />
+    <PackageReference Include="Npgsql" Version="7.0.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
   </ItemGroup>
 
@@ -17,6 +20,10 @@
     <ProjectReference Include="..\BusinessLogicLayer.Abstractions\BusinessLogicLayer.Abstractions.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\DataAccessLayer.Abstractions\DataAccessLayer.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\Generators\Fabrics\" />
   </ItemGroup>
 
 </Project>

@@ -24,6 +24,8 @@ using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using PseudoCRMAPI.Extensions;
 using System.Text;
+using BusinessLogicLayer.Abstractions.Database;
+using BusinessLogicLayer.Database.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +61,7 @@ builder.Services
     .AddScoped<IMessageReceiver<IReadOnlyList<MimeMessage>, User, string, SearchQuery>, ImapMessageService>();
 builder.Services.AddScoped<IMessageReceiver<IReadOnlyList<MimeMessage>, User, string, int>, PopMessageService>();
 builder.Services.AddScoped<IMessageSender<User, string, MimeMessage>, SmtpMessageService>();
+builder.Services.AddScoped<IDatabaseService, SqlServerServices>();
 
 builder.Services.AddScoped<IAuthService<JwtAuthLoginParameters, JwtAuthRegistrationParameters, JwtResult, JwtResult>, JwtAuthService>();
 
