@@ -20,16 +20,16 @@ jobs:
         dotnet-version: '7.0'
 
     - name: Restore dependencies
-      run: dotnet restore PseudoCRMAPI/PseudoCRMAPI.csproj
+      run: dotnet restore PseudoCRMAPI/PseudoCRMAPI.sln
 
     - name: Build
-      run: dotnet build PseudoCRMAPI/PseudoCRMAPI.csproj --configuration Release
+      run: dotnet build PseudoCRMAPI/PseudoCRMAPI.sln --configuration Release
 
     - name: Test
-      run: dotnet test PseudoCRMAPI/PseudoCRMAPI.csproj --logger "trx;LogFileName=testresults.xml"
+      run: dotnet test PseudoCRMAPI/PseudoCRMAPI.sln --logger "trx;LogFileName=testresults.xml"
 
     - name: Publish
-      run: dotnet publish PseudoCRMAPI/PseudoCRMAPI.csproj --configuration Release --output publish
+      run: dotnet publish PseudoCRMAPI/PseudoCRMAPI.sln --configuration Release --output publish
 
     #- name: Deploy to Azure Web App
     #  uses: azure/webapps-deploy@v2
