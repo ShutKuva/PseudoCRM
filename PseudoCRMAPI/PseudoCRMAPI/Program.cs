@@ -26,6 +26,7 @@ using PseudoCRMAPI.Extensions;
 using System.Text;
 using BusinessLogicLayer.Abstractions.Database;
 using BusinessLogicLayer.Database.Services;
+using Core.Pagination;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,7 @@ builder.Services.AddScoped<IClock, Clock>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("JwtOptions"));
+builder.Services.Configure<PaginationConfiguration>(builder.Configuration.GetSection("Pagination"));
 
 var app = builder.Build();
 

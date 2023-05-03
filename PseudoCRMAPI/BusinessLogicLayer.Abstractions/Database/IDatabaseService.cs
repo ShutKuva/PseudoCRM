@@ -1,14 +1,21 @@
-﻿namespace BusinessLogicLayer.Abstractions.Database
+﻿using Core.Database;
+
+namespace BusinessLogicLayer.Abstractions.Database
 {
-    public interface IDatabaseService
+    public interface IDatabaseService<TDatabase, TCollection, TPredicate, TColumnCollection, TCollectionRelations, TResult> 
+        where TPredicate : class
+        where TColumnCollection : class
+        where TCollectionRelations : class
     {
         Task CreateDatabase(string connectionString, string databaseName = null);
-        //Task<IEnumerable<DatabaseCollection>> GetCollections();
-        //public Task<IEnumerable<T>> GetEntities<T>(DatabasePredicate predicate = null,
-        //    string collectionName = "",
-        //    int skip = 0,
-        //    int take = 0,
-        //    List<DatabaseColumn> columns = null);
-        //Task AddEntity<T>(T entity, string collectionName = "");
+        Task<IEnumerable<DatabaseEntity>> GetEntities(
+            TDatabase database,
+            TCollection collection,
+            TPredicate predicate = null,
+            TColumnCollection columns = null,
+            TColumnCollection groupBycolumns = null,
+            TCollectionRelations relationCollection = null,
+            int skip = 0,
+            int take = 0);
     }
 }

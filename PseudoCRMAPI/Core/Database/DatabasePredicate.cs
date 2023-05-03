@@ -1,10 +1,11 @@
-﻿using Core.Database.Enums;
+﻿using Core.Abstractions.Database;
+using Core.Database.Enums;
 
 namespace Core.Database
 {
-    public class DatabasePredicate
+    public class DatabasePredicate : IDatabaseQueryable
     {
-        public object Data { get; set; }
+        public object? Data { get; set; }
         public DatabaseColumn? Column { get; set; }
         public DatabasePredicate? Left { get; set; }
         public DatabasePredicate? Right { get; set; }

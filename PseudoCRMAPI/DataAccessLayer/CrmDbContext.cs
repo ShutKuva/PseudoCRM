@@ -1,7 +1,6 @@
 ﻿using Core;
 using Core.Database;
 using Core.Email;
-using Core.Email.Additional;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer

@@ -2,20 +2,27 @@
 using Core.Database;
 using Dapper;
 using System.Data.SqlClient;
+using BusinessLogicLayer.Database.Generators.QueryGenerators.SqlQueryGenerators.Extensions;
+using BusinessLogicLayer.Database.Providers.Sql;
 using Core.Database.Connections;
 using Core.Database.Enums;
+using Core.Pagination;
 using DataAccessLayer.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace BusinessLogicLayer.Database.Services
 {
-    public class SqlServerServices : IDatabaseService
+    public class SqlServerServices : IDatabaseService<DatabaseObject, DatabaseCollection, DatabasePredicate, DatabaseColumnCollection, DatabaseCollectionRelationCollection, DatabaseEntity>
     {
-        private string? _databaseName;
         private readonly IRepository<DatabaseObject> _databaseRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly PaginationConfiguration _paginationConfiguration;
 
-        public SqlServerServices(IRepository<DatabaseObject> databaseRepository, IUnitOfWork unitOfWork)
+        public SqlServerServices(IRepository<DatabaseObject> databaseRepository, IUnitOfWork unitOfWork, IOptions<PaginationConfiguration> paginationConfiguration)
         {
+            _databaseRepository = databaseRepository;
+            _unitOfWork = unitOfWork;
+            _paginationConfiguration = paginationConfiguration.Value ?? throw new ArgumentNullException(nameof(paginationConfiguration));
         }
 
         public async Task CreateDatabase(string connectionString, string databaseName = null)
@@ -34,12 +41,32 @@ namespace BusinessLogicLayer.Database.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<T>> GetEntities<T>(DatabasePredicate predicate = null,
-            string collectionName = "",
+        public async Task<IEnumerable<DatabaseEntity>> GetEntities(
+            DatabaseObject database,
+            DatabaseCollection collection,
+            DatabasePredicate predicate = null,
+            DatabaseColumnCollection columns = null,
+            DatabaseColumnCollection groupBycolumns = null,
+            DatabaseCollectionRelationCollection relationCollection = null,
             int skip = 0,
-            int take = 0,
-            List<DatabaseColumn> columns = null)
+            int take = 0)
         {
+            List<DatabaseEntity> result = new List<DatabaseEntity>();
+
+            SqlConnection connection = new SqlConnection(database.Connection.GetConnectionString());
+
+            SqlQuery query = new SqlQuery();
+
+            query
+                .UseSelectQueryGenerator(columns)
+                .UseFromQueryGenerator(collection)
+                .UseJoinQueryGenerator(relationCollection)
+                .UsePredicateQueryGenerator(predicate)
+                .UseGroupByGenerator(groupBycolumns)
+                .UseSkipTakeQueryGenerator(_paginationConfiguration, new DatabaseSkipTakePage(skip: skip, take: take));
+
+            IEnumerable<string> queryResponse = await connection.QueryAsync<string>(query.GetQuery());
+
             return null;
         }
 

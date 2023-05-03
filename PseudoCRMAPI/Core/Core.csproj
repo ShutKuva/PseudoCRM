@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Core.Abstractions\Core.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Database\Providers\Sql\" />
+  </ItemGroup>
+
 </Project>

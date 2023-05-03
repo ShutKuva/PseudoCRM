@@ -1,9 +1,10 @@
-﻿using Core.Database;
+﻿using Core.Abstractions.Database;
+using Core.Database;
 
 namespace BusinessLogicLayer.Abstractions.Database.Generators.QueryGenerators
 {
-    public interface IQueryGenerator
+    public interface IQueryGenerator<T>
     {
-        public string GetQuery(DatabaseCollection collection = null, DatabasePredicate predicate = null, IEnumerable<DatabaseColumn> columns = null, int skip = 0, int take = 0, int page = 0);
+        public T GetQuery();
     }
 }
