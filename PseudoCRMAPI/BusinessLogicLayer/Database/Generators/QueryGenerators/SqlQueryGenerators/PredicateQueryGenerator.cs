@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Abstractions.Database.Generators.QueryGenerators;
+﻿using System.Numerics;
+using BusinessLogicLayer.Abstractions.Database.Generators.QueryGenerators;
 using Core.Abstractions.Database;
 using Core.Database;
 using Core.Database.Enums;
@@ -50,7 +51,7 @@ namespace BusinessLogicLayer.Database.Generators.QueryGenerators.SqlQueryGenerat
 
             if (predicate.Data != null)
             {
-                result.Append(predicate.Data + " ");
+                result.Append(GetStringRepresentationForData(predicate.Data) + " ");
             }
 
             if (predicate.Column != null)
@@ -72,5 +73,10 @@ namespace BusinessLogicLayer.Database.Generators.QueryGenerators.SqlQueryGenerat
             DatabaseOperators.NotEquals => "<>",
             DatabaseOperators.Or => "or",
         };
+
+        private string GetStringRepresentationForData(object data)
+        {
+            return data is int || data is double || data is float ? data.ToString() : $"'{data.ToString()}'";
+        }
     }
 }
