@@ -9,6 +9,7 @@ export const oauthState: OAuthState = {};
 export const REFRESH_TOKEN = "refreshToken";
 export const LOGIN = "login";
 export const TOKEN = "token";
+export const ID = "id";
 
 export const AuthSlice = createSlice({
   name: "auth",
@@ -18,8 +19,10 @@ export const AuthSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.login = action.payload.login;
       state.token = action.payload.token;
+      state.id = action.payload.id;
       localStorage.setItem(REFRESH_TOKEN, action.payload.refreshToken ?? "");
       localStorage.setItem(LOGIN, action.payload.login ?? "");
+      localStorage.setItem(ID, action.payload.id ?? "");
       localStorage.setItem(TOKEN, action.payload.token ?? "");
     },
   },

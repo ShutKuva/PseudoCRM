@@ -10,17 +10,12 @@ namespace DataAccessLayer.Repositories
         {
         }
 
-        public override Task<EmailCredentials?> ReadAsync(Expression<Func<EmailCredentials, bool>> predicate)
+        public override Task<EmailCredentials?> ReadAsync(Expression<Func<EmailCredentials, bool>> predicate, int skip, int take)
         {
             return _context.EmailCredentials.Include(emailCred => emailCred.ServerInformations).Where(predicate).FirstOrDefaultAsync();
         }
 
-        public override IEnumerable<EmailCredentials> ReadByCondition(Expression<Func<EmailCredentials, bool>> predicate, int skip, int take)
-        {
-            return _context.EmailCredentials.Include(emailCred => emailCred.ServerInformations).Where(predicate).Skip(skip).Take(take);
-        }
-
-        public override Task<IEnumerable<EmailCredentials>> ReadByConditionAsync(Expression<Func<EmailCredentials, bool>> predicate, int skip, int take)
+        public override Task<IEnumerable<EmailCredentials>> ReadCollectionAsync(Expression<Func<EmailCredentials, bool>> predicate, int skip, int take, int page)
         {
             return Task.FromResult(_context.EmailCredentials.Include(emailCred => emailCred.ServerInformations).Where(predicate).Skip(skip).Take(take).AsEnumerable());
         }
