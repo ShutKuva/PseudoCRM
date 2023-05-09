@@ -66,8 +66,6 @@ namespace BusinessLogicLayer.Auth.Jwt
 
             JwtResult result = await GenerateJwtResult(user);
 
-            await _unitOfWork.SaveChangesAsync();
-
             return result;
         }
 
