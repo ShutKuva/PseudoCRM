@@ -8,11 +8,18 @@
   right: 100px;
 }
 
-.chat-message-wrapper {
-}
-
 .message-input {
   display: block;
   position: relative;
   bottom: 0;
+}
+
+.messages {
+  overflow-y: auto;
+  height: 18vh;
+}
+
+.users {
+  overflow-y: auto;
+  height: 4vh;
 }

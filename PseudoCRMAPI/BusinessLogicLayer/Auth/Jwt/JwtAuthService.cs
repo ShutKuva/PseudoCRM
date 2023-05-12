@@ -11,7 +11,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AutoMapper;
 using BusinessLogicLayer.Abstractions;
-using BusinessLogicLayer.Services;
 
 namespace BusinessLogicLayer.Auth.Jwt
 {
@@ -56,9 +55,8 @@ namespace BusinessLogicLayer.Auth.Jwt
                 organization = new Organization() { Name = parameters.User.OrganizationName };
 
                 await _organizationService.CreateAsync(organization);
-
-                user.OrganizationId = organization.Id;
             }
+            user.OrganizationId = organization.Id;
 
             await _userRepository.CreateAsync(user);
 
@@ -91,7 +89,7 @@ namespace BusinessLogicLayer.Auth.Jwt
             User? user = await _userRepository.ReadAsync(u => u.Id == id, 0, 0);
             if (user == null)
             {
-                throw new ArgumentException("There is no user with this credentials");
+                throw new ArgumentException("There is no user with this id");
             }
 
             if (user.RefreshToken != oldResult.RefreshToken)

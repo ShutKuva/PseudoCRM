@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 using BusinessLogicLayer.Abstractions.Chat.Facades;
 using Core.ChatEntities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PseudoCRMAPI.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly IUserService<User> _userService;
@@ -23,7 +25,9 @@ namespace PseudoCRMAPI.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            User user = await _userService.ReadAsync(user => user.Id == int.Parse(Context.User.FindFirst(claim => claim.Type == ClaimNames.Id).Value), 0, 0);
+            int parsedId = int.Parse(Context.User?.FindFirst(claim => claim.Type == ClaimNames.Id).Value);
+
+            User user = await _userService.ReadAsync(user => user.Id == parsedId, 0, 0);
             
             if (_userDictionary.ContainsKey(user))
             {

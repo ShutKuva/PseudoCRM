@@ -5,11 +5,12 @@ import {
   HubConnectionBuilder,
   MessageHeaders,
 } from "@microsoft/signalr";
-import { MAIN_API } from "../../consts/url";
+import { MAIN_API, MAIN_API_WITHOUT_API } from "../../consts/url";
 import { MessageDto } from "../../interfaces/MessageDto";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../contexts/AuthContext";
+import Message from "./MessageChat";
 
 interface Props {}
 
@@ -30,7 +31,7 @@ const Chat = (props: ChatProps) => {
       .then((response) => setMessages(response.data));
 
     const newConnection = new HubConnectionBuilder()
-      .withUrl(`${MAIN_API}/chat`, {
+      .withUrl(`${MAIN_API_WITHOUT_API}/chat`, {
         headers: { Authorization: `Bearer ${auth.token}` },
       })
       .withAutomaticReconnect()
@@ -48,11 +49,14 @@ const Chat = (props: ChatProps) => {
   }, [connection]);
 
   function clickHandler() {
-    connection?.send();
+    if (message?.trim()) {
+      connection?.send("SendMessage", message);
+    }
   }
 
   return (
     <div className={styles.chat}>
+      <div className={styles.users}></div>
       <div className={styles["message-input"]}>
         <input
           type="text"
@@ -60,6 +64,11 @@ const Chat = (props: ChatProps) => {
           onChange={(event) => setMessage(event.target.value)}
         />
         <button onClick={clickHandler}>Send</button>
+      </div>
+      <div className={styles.messages}>
+        {messages.map((m, i) => {
+          return <Message name={m.name} text={m.text} key={i} />;
+        })}
       </div>
     </div>
   );

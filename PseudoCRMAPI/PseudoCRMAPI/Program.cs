@@ -29,7 +29,10 @@ using PseudoCRMAPI.Extensions;
 using PseudoCRMAPI.Hubs;
 using System.Text;
 using BusinessLogicLayer.Abstractions;
+using BusinessLogicLayer.Abstractions.Chat.Facades;
 using BusinessLogicLayer.Services;
+using BusinessLogicLayer.Chat.Facades;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +54,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddDbContext<CrmDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CrmConnectionString")));
+builder.Services.AddHangfire(config =>
+{
+    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnectionString"));
+});
+builder.Services.AddHangfireServer();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
@@ -71,6 +82,7 @@ builder.Services.AddScoped<IUserService<User>, UserService>();
 builder.Services.AddScoped<IMessageService<Message>, MessageService>();
 builder.Services.AddScoped<IOrganizationService<Organization>, OrganizationService>();
 builder.Services.AddScoped<IAuthService<JwtAuthLoginParameters, JwtAuthRegistrationParameters, JwtResult, JwtResult>, JwtAuthService>();
+builder.Services.AddScoped<IMessageFacade, MessageFacade>();
 
 builder.Services.AddScoped<IClock, Clock>();
 
@@ -90,7 +102,7 @@ if (app.Environment.IsDevelopment())
 app.UseMigration();
 app.UseCors(config =>
 {
-    config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    config.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://127.0.0.1:5173");
 });
 app.UseHttpsRedirection();
 
@@ -99,6 +111,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ChatHub>("chat");
+app.MapHub<ChatHub>("/chat");
 
 app.Run();
