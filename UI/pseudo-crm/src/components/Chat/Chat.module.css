@@ -1,0 +1,25 @@
+.chat {
+  width: 20vw;
+  height: 25vh;
+  background-color: #ffd5ac;
+  box-shadow: 0 5px 10px #000;
+  position: absolute;
+  bottom: 50px;
+  right: 100px;
+}
+
+.message-input {
+  display: block;
+  position: relative;
+  bottom: 0;
+}
+
+.messages {
+  overflow-y: auto;
+  height: 18vh;
+}
+
+.users {
+  overflow-y: auto;
+  height: 4vh;
+}

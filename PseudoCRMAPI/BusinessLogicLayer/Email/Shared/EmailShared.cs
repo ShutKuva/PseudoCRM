@@ -27,7 +27,7 @@ namespace BusinessLogicLayer.Email.Shared
 
         protected async Task<User> GetUserById(string user)
         {
-            User? userObj = await _userRepository.ReadAsync(u => u.Id == int.Parse(user));
+            User? userObj = await _userRepository.ReadAsync(u => u.Id == int.Parse(user), 0, 0);
 
             if (userObj == null)
             {

@@ -20,6 +20,7 @@ const RegisterForm = (props: RegisterFormProps) => {
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     handleSubmit(async (data) => {
+      data.organizationName = "Test";
       const credentials = await axios.post<Auth>("JwtAuth/register", data, {
         baseURL: MAIN_API,
       });

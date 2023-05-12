@@ -1,6 +1,6 @@
 ﻿using Core;
+using Core.ChatEntities;
 using Core.Email;
-using Core.Email.Additional;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
@@ -9,6 +9,9 @@ namespace DataAccessLayer
     {
         public DbSet<User> Users { get; set; }
         public DbSet<EmailCredentials> EmailCredentials { get; set; }
+        public DbSet<Message> Messages { get; set; } 
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
 
         public CrmDbContext(DbContextOptions<CrmDbContext> options) : base(options)
         {

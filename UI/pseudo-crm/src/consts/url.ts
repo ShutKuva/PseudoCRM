@@ -1,6 +1,7 @@
 import { OAuthConfig } from "../interfaces/OAuth";
 
 export const MAIN_API = "https://localhost:7119/api";
+export const MAIN_API_WITHOUT_API = "https://localhost:7119";
 
 export const oauthConfigs: OAuthConfig[] = [
   {
